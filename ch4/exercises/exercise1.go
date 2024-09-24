@@ -19,9 +19,10 @@ func main() {
 	count := 5
 	mutex := sync.RWMutex{}
 	go countdown(&count, &mutex)
-   
-  for count > 0 {
-    time.Sleep(500 * time.Millisecond)
-    fmt.Println(count)
-  }
+
+	for count > 0 {
+		mutex.Lock()
+		fmt.Println(count)
+		mutex.Unlock()
+	}
 }

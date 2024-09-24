@@ -31,14 +31,14 @@ func (rw *ReadWriteMutex) ReadUnlock() {
 	rw.readersLock.Lock()
 	// The reader goroutine decrements readersCounter by 1.
 	rw.readersCounter--
-  // If the reader goroutine is the last one out,
-  // it unlocks the global lock.
+	// If the reader goroutine is the last one out,
+	// it unlocks the global lock.
 	if rw.readersCounter == 0 {
-		rw.globalUnlock.Unlock()
+		rw.globalLock.Unlock()
 	}
 	rw.readersLock.Unlock()
 }
 
 func (rw *ReadWriteMutex) WriteUnlock() {
-  rw.globalLock.Unlock()
+	rw.globalLock.Unlock()
 }
