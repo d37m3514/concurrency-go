@@ -59,3 +59,15 @@ func (rw *ReadWriteMutex) ReadUnlock() {
 		rw.cond.Broadcast()
 	}
 }
+
+// WriteUnlock() will set the writerActive flag to false before it exits
+// there can be only one writer active at any point it time, so it will send Broadcast()
+// to wake up both writer and reader that are currently waiting for the conditional variable.
+// if both reader and writer are waiting, writer will be prioritized since a reader cannot
+// acquire the lock when there's a writer waiting.
+func (rw *ReadWriteMutex) WriteUnlock() {
+	rw.cond.L.Lock()
+	defer rw.cond.L.Lock()
+	rw.writerActive = false
+	rw.cond.Broadcast()
+}
