@@ -67,7 +67,7 @@ func (rw *ReadWriteMutex) ReadUnlock() {
 // acquire the lock when there's a writer waiting.
 func (rw *ReadWriteMutex) WriteUnlock() {
 	rw.cond.L.Lock()
-	defer rw.cond.L.Lock()
+	defer rw.cond.L.Unlock()
 	rw.writerActive = false
 	rw.cond.Broadcast()
 }
