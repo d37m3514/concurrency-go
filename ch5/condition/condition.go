@@ -36,7 +36,9 @@ func stingy(money *int, cond *sync.Cond) {
 	for i := 0; i < 1000000; i++ {
 		cond.L.Lock()
 		*money += 10
-		cond.Signal()
+		if *money >= 50 {
+			cond.Signal()
+		}
 		cond.L.Unlock()
 	}
 	fmt.Println("Stingy done!")
