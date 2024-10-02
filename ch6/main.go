@@ -3,23 +3,22 @@ package main
 import (
 	ch6_waitgroup "d37m3514/concurrency-go/ch6/waitgroups"
 	"fmt"
+	"time"
 )
 
 func main() {
-	wg := *ch6_waitgroup.NewWaitGroupV2()
-	base := 0
-
-	wg.Add(3)
-	for i := 0; i < 3; i++ {
-		go doWork(&wg, &base)
-	}
-	wg.Wait()
-	fmt.Println("All done")
+	Barrier := *ch6_waitgroup.NewBarrier()
+	go workAndWait("Red", 4, &Barrier)
+	go workAndWait("Green", 2, &Barrier)
+	time.Sleep(10 * time.Second)
 }
-func doWork(wg *ch6_waitgroup.WaitGroupV2, base *int) {
-	defer wg.Done()
-	*base++
-	fmt.Println("Done!")
+
+func workAndWait(name string, timeToWork int, barrier *ch6_waitgroup.Barrier) {
+	start := time.Now()
+	fmt.Println(time.Since(start), name, "is running...")
+	time.Sleep(time.Duration(timeToWork) * time.Second)
+	fmt.Println(time.Since(start), name, "is waiting on barrier")
+	barrier.Wait()
 }
 
 /*func main() {
