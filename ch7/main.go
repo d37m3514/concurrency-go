@@ -9,7 +9,7 @@ import (
 func main() {
 	msgChannel := make(chan int, 6)
 	var wg sync.WaitGroup
-	wg.Add(1)
+	wg.Add(6)
 	go receiver(msgChannel, &wg)
 	for i := 0; i <= 5; i++ {
 		msgChannel <- i
